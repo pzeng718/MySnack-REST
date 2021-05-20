@@ -18,8 +18,10 @@ public class ProductService {
         ResultSet resultSet = DatabaseUtils.getQueryResults(connection, ALL_PRODUCTS_QUERY + " and id = " + id + ";");
 
         try {
-            if (resultSet.next()) {
+            if (resultSet != null && resultSet.next()) {
                 return getProductWithResultSet(resultSet);
+            }else{
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -31,8 +33,6 @@ public class ProductService {
                 e.printStackTrace();
             }
         }
-
-        return null;
     }
 
     public static ArrayList<Product> getAllProducts() {
@@ -95,16 +95,20 @@ public class ProductService {
     private static Product getProductWithResultSet(ResultSet resultSet) {
         Product product = new Product();
         try {
-            product.setId(resultSet.getString("id"));
-            product.setName(resultSet.getString("name"));
-            product.setPrice(Double.parseDouble(resultSet.getString("price")));
-            product.setQty(Integer.parseInt(resultSet.getString("qty")));
-            product.setDescription(resultSet.getString("description"));
-            product.setManufacturer(resultSet.getString("manufacturer"));
-            product.setImages(resultSet.getString("images"));
+            if(resultSet.getString("id") != null){
+                product.setId(resultSet.getString("id"));
+                product.setName(resultSet.getString("name"));
+                product.setPrice(Double.parseDouble(resultSet.getString("price")));
+                product.setQty(Integer.parseInt(resultSet.getString("qty")));
+                product.setDescription(resultSet.getString("description"));
+                product.setManufacturer(resultSet.getString("manufacturer"));
+                product.setImages(resultSet.getString("images"));
 
-            return product;
-        } catch (SQLException e) {
+                return product;
+            }else{
+                return null;
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

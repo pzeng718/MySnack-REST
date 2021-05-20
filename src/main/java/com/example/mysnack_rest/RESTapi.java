@@ -15,6 +15,9 @@ public class RESTapi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProduct(@PathParam("id") String id){
         Product product = ProductService.getProductById(Integer.parseInt(id));
+        if(product == null){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         return Response.ok(product, MediaType.APPLICATION_JSON).build();
     }
@@ -44,6 +47,6 @@ public class RESTapi {
             return Response.ok().entity("Product with product id: " + id + " was deleted.").build();
         }
 
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }
